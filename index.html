@@ -26,6 +26,7 @@
                     fontFamily: {
                         heading: ['Playfair Display', 'serif'],
                         body: ['Poppins', 'sans-serif'],
+                        urdu: ['Noto Nastaliq Urdu', 'serif'],
                     }
                 }
             }
@@ -46,45 +47,42 @@
             scroll-behavior: smooth;
         }
 
-        /*
-         * Core Layout:
-         * 1. Lock body scrolling initially.
-         * 2. Set up scroll-snapping container.
-        */
         body {
             margin: 0;
             font-family: var(--font-body);
             background-color: var(--cream-bg);
             color: var(--dark-green);
-            /* --- CRITICAL: Lock scrolling during animation --- */
-            overflow: hidden; 
+            overflow: hidden; /* Lock scrolling during animation */
             
-            /* --- CRITICAL: Scroll Snap Setup --- */
-            /* We will snap on the <body> element */
+            /* Scroll Snap Setup */
             height: 100vh;
-            overflow-y: scroll; /* This will be enabled by JS */
+            overflow-y: scroll; /* Enabled by JS */
             scroll-snap-type: y mandatory;
         }
 
-        /* * Section Styling:
-         * Each section is a full-screen snap point.
-        */
+        /* Section Styling */
         .snap-section {
             height: 100vh;
             width: 100%;
-            scroll-snap-align: start; /* Snap to the top of this element */
+            scroll-snap-align: start; /* Snap to the top */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 1rem; /* Reduced padding for mobile */
             box-sizing: border-box;
-            position: relative; /* For scroll indicator */
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            .snap-section {
+                padding: 2rem; /* Restore padding for desktop */
+            }
         }
 
         /* --- Hero Section Styles --- */
         #hero .school-logo {
-            max-width: 180px;
+            max-width: 150px; /* Adjusted for mobile */
             height: auto;
             margin-bottom: 1.5rem;
             opacity: 0;
@@ -98,7 +96,7 @@
             line-height: 1.3;
             color: var(--dark-green);
             margin: 0;
-            white-space: nowrap;
+            text-align: center; /* FIX: Center text */
         }
 
         #hero .hero-title span {
@@ -115,19 +113,6 @@
         #hero .hero-title span:nth-child(2) { animation-delay: 1.7s; }
         #hero .hero-title span:nth-child(3) { animation-delay: 2.2s; }
         #hero .hero-title span:nth-child(4) { animation-delay: 2.7s; }
-
-        /* Animation keyframes */
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
 
         /* --- Scroll Down Indicator --- */
         .scroll-indicator {
@@ -148,8 +133,16 @@
         }
 
         /* --- Auth Section Styles --- */
-        #auth {
-            background-color: var(--cream-bg); /* Ensure bg color */
+        #auth .auth-card {
+            width: 100%;
+            max-width: 420px; /* Slightly wider */
+            padding: 1.5rem; /* Mobile padding */
+        }
+        
+        @media (min-width: 768px) {
+             #auth .auth-card {
+                padding: 2.5rem; /* Desktop padding */
+             }
         }
         
         /* Auth form field transitions */
@@ -176,34 +169,23 @@
             40% { transform: translateY(-10px); }
             60% { transform: translateY(-5px); }
         }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            #hero .hero-title {
-                white-space: normal;
-                font-size: clamp(1.8rem, 7vw, 4rem);
-            }
-            #hero .school-logo {
-                max-width: 150px;
-                margin-bottom: 1rem;
-            }
-        }
     </style>
 </head>
 <body>
 
     <!-- SECTION 1: HERO -->
+    <!-- The `align-items: center` in `.snap-section` and `text-center` below fix the alignment -->
     <section id="hero" class="snap-section">
-        <img src="school_logo.png" alt="Tehzeeb Islamic English School Logo" class="school-logo">
+        <img src="https://placehold.co/150x150/FAF8F1/046307?text=LOGO" alt="Tehzeeb Islamic English School Logo" class="school-logo">
         
-        <h1 class="hero-title">
+        <h1 class="hero-title text-center"> <!-- Added text-center for redundant safety -->
             <span>Tehzeeb</span>
             <span>Islamic</span>
             <span>English</span>
             <span>School</span>
         </h1>
 
-        <p class="text-xl md:text-2xl text-dark-green text-center mt-4 font-urdu" style="font-family: 'Noto Nastaliq Urdu', serif; opacity: 0; animation: fadeIn 1s ease-out 3.2s forwards;">
+        <p class="text-xl md:text-2xl text-dark-green text-center mt-4 font-urdu" style="opacity: 0; animation: fadeIn 1s ease-out 3.2s forwards;">
             تربیتِ اقدارِ اسلامی، فروغِ تعلیمی برتری
         </p>
 
@@ -216,13 +198,13 @@
         </div>
     </section>
 
-    <!-- SECTION 2: AUTH (Content from auth.html) -->
+    <!-- SECTION 2: AUTH -->
     <section id="auth" class="snap-section">
         <!-- Main Auth Card -->
-        <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl w-full max-w-md">
+        <div class="auth-card bg-white rounded-2xl shadow-xl mx-auto">
 
             <!-- School Logo -->
-            <img src="school_logo.png" alt="School Logo" class="w-20 md:w-24 mx-auto mb-6">
+            <img src="https://placehold.co/100x100/FAF8F1/046307?text=LOGO" alt="School Logo" class="w-20 md:w-24 mx-auto mb-6">
             
             <!-- Login/Sign Up Toggle -->
             <div class="flex bg-gray-100 rounded-full p-1 mb-6">
@@ -298,7 +280,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- AUTH FORM LOGIC (from auth.html) ---
+            // --- AUTH FORM LOGIC ---
             
             let isLogin = true;
             let selectedRole = 'Teacher'; // Default role
@@ -353,11 +335,8 @@
             signupBtn.addEventListener('click', () => { isLogin = false; updateFormUI(); });
             roleButtons.forEach(btn => { btn.addEventListener('click', () => { selectRole(btn.dataset.role); }); });
             
-            // --- THIS IS THE FIX ---
             footerLink.addEventListener('click', (e) => {
-                // Prevent the <a> tag's default navigation behavior
                 e.preventDefault(); 
-                
                 if (e.target.dataset.action === 'signup') { 
                     isLogin = false; 
                     updateFormUI(); 
@@ -373,29 +352,26 @@
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 
-                // Store user info in sessionStorage
                 sessionStorage.setItem('isLoggedIn', 'true');
                 sessionStorage.setItem('userRole', selectedRole);
                 sessionStorage.setItem('userEmail', email);
                 
                 if (isLogin) {
-                    // For login, redirect to appropriate dashboard
+                    // In a real app, you'd verify credentials here
                     redirectToDashboard(selectedRole);
                 } else {
+                    // In a real app, you'd create the user here
                     const fullName = document.getElementById('full-name').value;
                     const confirmPassword = document.getElementById('confirm-password').value;
                     if (password !== confirmPassword) {
                         alert('Passwords do not match. Please try again.'); 
                         return;
                     }
-                    // Store additional sign-up info
                     sessionStorage.setItem('userName', fullName);
-                    // Redirect to appropriate dashboard
                     redirectToDashboard(selectedRole);
                 }
             });
 
-            // Function to redirect to appropriate dashboard
             function redirectToDashboard(role) {
                 switch(role) {
                     case 'Admin':
@@ -408,44 +384,37 @@
                         window.location.href = 'student.html'; // Parents go to student dashboard
                         break;
                     default:
+                        // Fallback, though a role should always be selected
                         alert('Invalid role selected');
                 }
             }
 
-            // Initialize auth form UI
+            // Set initial state
             updateFormUI();
-            selectRole(selectedRole);
-
-            // --- END OF AUTH LOGIC ---
-
+            selectRole(selectedRole); // Select the default role
 
             // --- HERO-TO-AUTH TRANSITION LOGIC ---
             
-            // Last animation ends at 2.7s + 1s = 3.7s
-            const HERO_ANIMATION_DURATION = 3700; 
+            const HERO_ANIMATION_DURATION = 3700; // Total duration of hero animations (in ms)
             const authSection = document.getElementById('auth');
             const scrollIndicator = document.getElementById('scroll-indicator');
 
-            // Fade in the scroll indicator just BEFORE the main animation finishes
+            // Show scroll indicator just before hero animation ends
             setTimeout(() => {
                 if (scrollIndicator) {
                     scrollIndicator.style.opacity = 1;
                 }
-            }, HERO_ANIMATION_DURATION - 500); // Fade in at 3.2s
+            }, HERO_ANIMATION_DURATION - 500); // 500ms before end
 
-            // AFTER the animation finishes, enable scrolling and auto-scroll
+            // Enable scrolling and scroll to auth section *after* hero animation
             setTimeout(() => {
-                // Enable scrolling on the body
-                document.body.style.overflow = 'auto'; 
-                
-                // Automatically scroll to the auth section
+                document.body.style.overflow = 'auto'; // Re-enable scrolling for the page
                 if (authSection) {
                     authSection.scrollIntoView();
                 }
-            }, HERO_ANIMATION_DURATION + 200); // Auto-scroll at 3.9s
+            }, HERO_ANIMATION_DURATION + 200); // 200ms after end
         });
     </script>
 
 </body>
 </html>
-
