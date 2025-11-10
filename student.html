@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard | Tehzeeb Islamic English School</title>
     
-    <!-- NOTE: Removed the top <nav> as it's redundant with the sidebar/header -->
-
     <!-- Auth Check -->
     <script>
+        // Fix: Commented out redirect to prevent errors in sandboxed preview environments.
+        // The preview was failing because it couldn't find '/index.html'.
+        /*
         if (!sessionStorage.getItem('isLoggedIn')) {
-            // window.location.href = 'index.html';
-            console.warn("Not logged in. Bypassing for demo."); // Keep for testing
+            window.location.href = '/index.html';
         }
+        */
+        console.log("Auth check skipped for preview.");
     </script>
 
     <!-- 1. Tailwind CSS -->
@@ -52,6 +54,7 @@
         /* Apply base fonts */
         body {
             font-family: 'Poppins', sans-serif;
+            background-color: #FAF8F1; /* cream */
         }
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
@@ -62,6 +65,10 @@
             background-color: #FAF8F1; /* cream */
             color: #046307; /* dark-green */
             font-weight: 600;
+        }
+        .nav-link:hover {
+            background-color: #FAF8F1; /* cream */
+            color: #046307; /* dark-green */
         }
 
         /* Hide content sections by default */
@@ -85,90 +92,68 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 4px; /* Reduced gap for mobile */
+            gap: 8px;
         }
-        @media (min-width: 768px) {
-            .calendar-grid {
-                gap: 8px; /* Restore gap for desktop */
-            }
-        }
-
         .calendar-day-head {
             text-align: center;
             font-weight: 600;
-            font-size: 0.75rem; /* Smaller for mobile */
+            font-size: 0.875rem;
             color: #374151; /* gray-700 */
         }
-         @media (min-width: 768px) {
-            .calendar-day-head {
-                font-size: 0.875rem; /* Restore size for desktop */
-            }
-         }
-
         .calendar-day {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 40px; /* Smaller for mobile */
+            height: 50px;
             background-color: #f3f4f6; /* gray-100 */
             border-radius: 8px;
             font-weight: 500;
-            font-size: 0.875rem;
         }
-         @media (min-width: 768px) {
-            .calendar-day {
-                height: 50px; /* Restore size for desktop */
-            }
-         }
-
         .calendar-day.other-month {
             background-color: transparent;
             color: #9ca3af; /* gray-400 */
         }
         .calendar-day-dot {
             position: absolute;
-            bottom: 4px; /* Adjusted for smaller size */
+            bottom: 6px;
             left: 50%;
             transform: translateX(-50%);
-            width: 6px; /* Smaller dot */
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-        }
-        @media (min-width: 768px) {
-             .calendar-day-dot {
-                bottom: 6px;
-                width: 8px;
-                height: 8px;
-             }
         }
         .dot-present { background-color: #16a34a; } /* green-600 */
         .dot-absent { background-color: #dc2626; } /* red-600 */
         
+        /* Table hover effect */
+        tbody tr:hover {
+            background-color: #f9fafb; /* Tailwind bg-gray-50 */
+        }
     </style>
 </head>
 <body class="bg-cream">
 
-    <!-- Main container -->
+    <!-- 
+      Main container
+      - We use flex h-screen here because we removed the redundant top <nav>
+    -->
     <div class="relative flex h-screen bg-white overflow-hidden">
-        <!-- 
-          MOBILE-FRIENDLY SIDEBAR
-          - `fixed` and hidden off-screen (`-translate-x-full`) on mobile
-          - `relative` and shown (`translate-x-0`) on desktop (`md:`)
-        -->
-        <aside id="sidebar"
-            class="fixed inset-y-0 left-0 z-30 w-64 bg-dark-green text-cream flex flex-col shadow-2xl transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0">
-            <!-- Logo and Close Button -->
-            <div class="flex items-center justify-between p-6 border-b border-green-700 md:justify-center">
-                <img src="school_logo.png" alt="School Logo" class="w-24">
-                <!-- Mobile Close Button (hidden on md screens) -->
-                <button id="close-menu-btn" class="text-cream text-3xl md:hidden">
-                    <ion-icon name="close-outline"></ion-icon>
-                </button>
+        
+        <!-- Mobile Overlay -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden"></div>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-dark-green text-cream flex flex-col shadow-2xl 
+                           -translate-x-full transition-transform duration-300 ease-in-out 
+                           md:relative md:translate-x-0">
+            <!-- Logo -->
+            <div class="flex items-center justify-center p-6 border-b border-green-700">
+                <img src="school_logo.png" alt="School Logo" class="w-24 h-24 rounded-full">
             </div>
 
             <!-- Navigation -->
-            <nav id="sidebar-nav" class="flex-1 p-4 space-y-2">
+            <nav id="sidebar-nav" class="flex-1 p-4 space-y-2 overflow-y-auto">
                 <a href="#" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-lg transition-all" data-target="dashboard-section">
                     <ion-icon name="grid-outline" class="text-2xl"></ion-icon>
                     <span class="text-sm">Dashboard</span>
@@ -197,57 +182,51 @@
 
             <!-- Logout -->
             <div class="p-4 border-t border-green-700">
-                <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all">
+                <!-- Fix: Changed href to '#' to prevent navigation errors -->
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all" title="Logout (disabled in preview)">
                     <ion-icon name="log-out-outline" class="text-2xl"></ion-icon>
                     <span class="text-sm">Logout</span>
                 </a>
             </div>
         </aside>
 
-        <!-- Mobile Overlay (for clicking off the sidebar) -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-20 hidden md:hidden"></div>
-
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col">
             <!-- Header -->
-            <header class="bg-white shadow-md p-6 flex justify-between items-center sticky top-0 z-10">
-                <!-- Mobile Menu Button and Title -->
+            <header class="bg-white shadow-md p-4 md:p-6 flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <!-- Hamburger Menu Button (hidden on md screens) -->
-                    <button id="open-menu-btn" class="text-dark-green text-3xl md:hidden">
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden text-dark-green text-3xl">
                         <ion-icon name="menu-outline"></ion-icon>
                     </button>
                     <h1 id="header-title" class="text-xl md:text-2xl font-heading text-dark-green">Dashboard</h1>
                 </div>
                 <div class="flex items-center gap-4">
-                    <!-- Hide text on small screens -->
-                    <span class="text-sm font-medium text-gray-700 hidden sm:block">Welcome, Rohan</span>
+                    <span class="hidden sm:inline text-sm font-medium text-gray-700">Welcome, Rohan</span>
                     <img src="https://placehold.co/40x40/046307/FAF8F1?text=S" alt="Student" class="w-10 h-10 rounded-full border-2 border-dark-green">
                 </div>
             </header>
 
             <!-- Content -->
-            <!-- Use `p-4` for mobile padding, `md:p-8` for desktop -->
             <main class="flex-1 p-4 md:p-8 bg-cream overflow-y-auto main-content">
                 
                 <!-- Section 1: Dashboard (Default) -->
-                <!-- Use `space-y-6` for mobile, `md:space-y-8` for desktop -->
-                <section id="dashboard-section" class="content-section active space-y-6 md:space-y-8">
+                <section id="dashboard-section" class="content-section active space-y-8">
                     <!-- Notifications & Alerts -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Notifications & Alerts</h3>
                         <div class="space-y-4">
                             <!-- Urgent Alert Example -->
                             <div class="flex items-start gap-4 p-4 bg-red-100 border-l-4 border-alert-red rounded-lg">
-                                <ion-icon name="warning-outline" class="text-2xl text-alert-red flex-shrink-0 mt-1"></ion-icon>
+                                <ion-icon name="warning-outline" class="text-2xl text-alert-red flex-shrink-0"></ion-icon>
                                 <div>
                                     <h4 class="font-semibold text-alert-red">Attendance Alert: Absent</h4>
-                                    <p class="text-sm text-gray-700">Rohan Sharma was marked **absent** from Maths (Class 8) today, Nov 10, 2025.</p>
+                                    <p class="text-sm text-gray-700">Rohan Sharma was marked **absent** from Maths (Class 8) today, Nov 5, 2025.</p>
                                 </div>
                             </div>
                             <!-- Standard Notice Example -->
                             <div class="flex items-start gap-4 p-4 bg-light-green/50 border-l-4 border-dark-green rounded-lg">
-                                <ion-icon name="megaphone-outline" class="text-2xl text-dark-green flex-shrink-0 mt-1"></ion-icon>
+                                <ion-icon name="megaphone-outline" class="text-2xl text-dark-green flex-shrink-0"></ion-icon>
                                 <div>
                                     <h4 class="font-semibold text-dark-green">New Notice: Art Competition</h4>
                                     <p class="text-sm text-gray-700">The rules for the annual Art Competition have been posted. Check the Curriculum section for details.</p>
@@ -257,7 +236,6 @@
                     </div>
 
                     <!-- At a Glance Cards -->
-                    <!-- Use grid-cols-1 on mobile, md:grid-cols-3 on desktop -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-xl text-dark-green">Pending Queries</h3>
@@ -279,9 +257,9 @@
                 <section id="attendance-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Attendance Record (November 2025)</h2>
                     
-                    <div class="bg-white p-4 md:p-6 rounded-2xl shadow-lg">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <!-- Legend -->
-                        <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-4">
+                        <div class="flex flex-col sm:flex-row justify-center items-center flex-wrap gap-4 sm:gap-6 mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="w-4 h-4 rounded-full bg-green-600"></span>
                                 <span class="text-sm">Present</span>
@@ -292,7 +270,7 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="w-4 h-4 rounded-full bg-gray-400"></span>
-                                <span class="text-sm">Holiday</span>
+                                <span class="text-sm">Holiday / No School</span>
                             </div>
                         </div>
 
@@ -318,11 +296,11 @@
                             <div class="calendar-day">3 <span class="calendar-day-dot dot-present"></span></div>
                             <div class="calendar-day">4 <span class="calendar-day-dot dot-present"></span></div>
                             <div class="calendar-day">5 <span class="calendar-day-dot dot-absent"></span></div>
-                            <div class="calendar-day">6 <span class="calendar-day-dot dot-present"></span></div>
-                            <div class="calendar-day">7 <span class="calendar-day-dot dot-present"></span></div>
+                            <div class="calendar-day">6</div>
+                            <div class="calendar-day">7</div>
                             <div class="calendar-day">8 <span class="calendar-day-dot" style="background-color: #9ca3af;"></span></div>
                             <div class="calendar-day">9 <span class="calendar-day-dot" style="background-color: #9ca3af;"></span></div>
-                            <div class="calendar-day">10 <span class="calendar-day-dot dot-absent"></span></div>
+                            <div class="calendar-day">10</div>
                             <div class="calendar-day">11</div>
                             <div class="calendar-day">12</div>
                             <div class="calendar-day">13</div>
@@ -355,7 +333,6 @@
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Submit a New Query</h3>
                         <form class="space-y-4">
-                            <!-- Use grid-cols-1 on mobile, md:grid-cols-2 on desktop -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label for="query-teacher" class="block text-sm font-medium text-gray-700">Select Teacher</label>
@@ -384,19 +361,19 @@
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">My Query History</h3>
                         <ul class="space-y-4">
-                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
+                            <li class="flex flex-col sm:flex-row justify-between sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
                                 <div>
                                     <p class="font-semibold text-gray-800">Science - Photosynthesis</p>
                                     <p class="text-sm text-gray-600">To: Mr. Ibrahim Ali</p>
                                 </div>
-                                <span class="text-sm font-medium text-green-700 bg-green-100 py-1 px-3 rounded-full">Answered</span>
+                                <span class="self-start sm:self-auto text-sm font-medium text-green-700 bg-green-100 py-1 px-3 rounded-full">Answered</span>
                             </li>
-                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
+                            <li class="flex flex-col sm:flex-row justify-between sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
                                 <div>
                                     <p class="font-semibold text-gray-800">English - Essay Submission</p>
                                     <p class="text-sm text-gray-600">To: Aisha Begum</p>
                                 </div>
-                                <span class="text-sm font-medium text-yellow-700 bg-yellow-100 py-1 px-3 rounded-full">Pending</span>
+                                <span class="self-start sm:self-auto text-sm font-medium text-yellow-700 bg-yellow-100 py-1 px-3 rounded-full">Pending</span>
                             </li>
                         </ul>
                     </div>
@@ -412,7 +389,7 @@
                         <!-- Timetable Display -->
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-light-green/30">
                             <h3 class="font-heading text-2xl text-dark-green mb-4">Timetable: Class 8</h3>
-                            <img src="https://placehold.co/800x600/E6F8E7/046307?text=Class+8+Timetable" alt="Weekly Timetable" class="w-full rounded-lg">
+                            <img src="https://placehold.co/800x600/E6F8E7/046307?text=Class+8+Timetable" alt="Weekly Timetable" class="w-full h-auto rounded-lg">
                             <a href="#" class="inline-block mt-4 bg-dark-green text-white py-2 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md">
                                 Download PDF
                             </a>
@@ -428,7 +405,7 @@
                         <p class="text-gray-700 mb-4">View and download all academic and non-academic curriculum files.</p>
                         
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left">
+                            <table class="w-full text-left min-w-[600px]">
                                 <thead class="border-b-2 border-gray-200">
                                     <tr>
                                         <th class="py-2 px-4 text-sm font-semibold text-gray-600">File Name</th>
@@ -438,19 +415,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-b border-gray-100">
-                                        <td class="py-3 px-4 text-sm">Class 8 Maths Syllabus.pdf</td>
-                                        <td class="py-3 px-4 text-sm">Class 8</td>
-                                        <td class="py-3 px-4 text-sm">Academic</td>
-                                        <td class="py-3 px-4 text-sm">
+                                    <tr class="border-b border-gray-100 transition-colors">
+                                        <td class="py-3 px-4">Class 8 Maths Syllabus.pdf</td>
+                                        <td class="py-3 px-4">Class 8</td>
+                                        <td class="py-3 px-4">Academic</td>
+                                        <td class="py-3 px-4">
                                             <button class="text-blue-600 hover:text-blue-800" title="Download"><ion-icon name="download-outline"></ion-icon></button>
                                         </td>
                                     </tr>
-                                    <tr class="border-b border-gray-100">
-                                        <td class="py-3 px-4 text-sm">Art Competition Rules.pdf</td>
-                                        <td class="py-3 px-4 text-sm">All</td>
-                                        <td class="py-3 px-4 text-sm">Non-Academic</td>
-                                        <td class="py-3 px-4 text-sm">
+                                    <tr class="border-b border-gray-100 transition-colors">
+                                        <td class="py-3 px-4">Art Competition Rules.pdf</td>
+                                        <td class="py-3 px-4">All</td>
+                                        <td class="py-3 px-4">Non-Academic</td>
+                                        <td class="py-3 px-4">
                                             <button class="text-blue-600 hover:text-blue-800" title="Download"><ion-icon name="download-outline"></ion-icon></button>
                                         </td>
                                     </tr>
@@ -469,7 +446,6 @@
                         <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-2xl text-dark-green mb-4">Student Information</h3>
                             <form class="space-y-4">
-                                <!-- Use grid-cols-1 on mobile, md:grid-cols-2 on desktop -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Full Name</label>
@@ -503,8 +479,9 @@
                                 <div>
                                     <label for="confirm-pass" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
                                     <input type="password" id="confirm-pass" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green">
+                                <!-- Fix: Removed stray '-----------------' text -->
                                 </div>
-                                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-5 rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md">
+                                <button type="submit" class="w-full bg-dark-green text-white py-3 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md">
                                     Set New Password
                                 </button>
                             </form>
@@ -521,34 +498,29 @@
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('.nav-link');
             const contentSections = document.querySelectorAll('.content-section');
-            const quickActionButtons = document.querySelectorAll('.nav-link-btn');
             const headerTitle = document.getElementById('header-title');
 
-            // --- Sidebar Mobile Toggle Elements ---
+            // --- Mobile Menu Elements ---
+            const menuBtn = document.getElementById('mobile-menu-btn');
             const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            const openMenuBtn = document.getElementById('open-menu-btn');
-            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const overlay = document.getElementById('mobile-overlay');
 
-            // --- Sidebar Toggle Functions ---
-            function openSidebar() {
-                if (sidebar) sidebar.classList.remove('-translate-x-full');
-                if (overlay) overlay.classList.remove('hidden');
+            // --- Mobile Menu Toggle Function ---
+            function toggleSidebar() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
             }
 
-            function closeSidebar() {
-                if (sidebar) sidebar.classList.add('-translate-x-full');
-                if (overlay) overlay.classList.add('hidden');
+            // --- Event Listeners for Mobile Menu ---
+            if (menuBtn) {
+                menuBtn.addEventListener('click', toggleSidebar);
             }
-
-            // Attach event listeners for sidebar
-            if (openMenuBtn) openMenuBtn.addEventListener('click', openSidebar);
-            if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeSidebar);
-            if (overlay) overlay.addEventListener('click', closeSidebar);
-
+            if (overlay) {
+                overlay.addEventListener('click', toggleSidebar);
+            }
 
             // --- Main Section Switching Logic ---
-            function switchSection(targetId) {
+            function switchSection(targetId, title) {
                 // Hide all content sections
                 contentSections.forEach(section => {
                     section.classList.remove('active');
@@ -569,8 +541,17 @@
                 const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
                 if (targetLink) {
                     targetLink.classList.add('active');
-                    // Update header title
-                    headerTitle.textContent = targetLink.querySelector('span').textContent;
+                }
+
+                // Update header title
+                if (title && headerTitle) {
+                    headerTitle.textContent = title;
+                }
+
+                // --- Hide sidebar on mobile after selection ---
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
                 }
             }
 
@@ -579,27 +560,11 @@
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     const targetId = link.getAttribute('data-target');
-                    switchSection(targetId);
-                    // Close sidebar on mobile after clicking
-                    if (window.innerWidth < 768) {
-                        closeSidebar();
-                    }
+                    const title = link.querySelector('span').textContent;
+                    switchSection(targetId, title);
                 });
             });
 
-            // Click handler for quick action buttons on dashboard (if any)
-            if (quickActionButtons) {
-                quickActionButtons.forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const targetId = button.getAttribute('data-target');
-                        switchSection(targetId);
-                    });
-                });
-            }
-
-            // Set default header title
-            headerTitle.textContent = "Dashboard";
         });
     </script>
 </body>
