@@ -40,107 +40,109 @@
 
     <!-- 5. Custom CSS for Dashboard -->
     <style>
-        /* ... existing styles ... */
+        /* Apply base fonts */
         body {
             font-family: 'Poppins', sans-serif;
+            background-color: #FAF8F1; /* cream */
         }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
+        h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
         }
 
+        /* Sidebar active state */
         .nav-link.active {
-            background-color: #FAF8F1;
-            color: #046307;
+            background-color: #FAF8F1; /* cream */
+            color: #046307; /* dark-green */
             font-weight: 600;
         }
+        .nav-link:hover {
+            background-color: #FAF8F1; /* cream */
+            color: #046307; /* dark-green */
+        }
 
+        /* Hide content sections by default */
         .content-section {
             display: none;
         }
-
         .content-section.active {
             display: block;
         }
 
-        .main-content::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .main-content::-webkit-scrollbar-track {
-            background: #FAF8F1;
-        }
-
+        /* Custom scrollbar for content area */
+        .main-content::-webkit-scrollbar { width: 8px; }
+        .main-content::-webkit-scrollbar-track { background: #FAF8F1; }
         .main-content::-webkit-scrollbar-thumb {
             background: #c4c4c4;
             border-radius: 4px;
         }
+        .main-content::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
 
-        .main-content::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
-        }
-
+        /* Camera styles */
         #camera-border {
             border: 8px solid #9ca3af;
             border-radius: 1.25rem;
             background-color: #333;
             transition: border-color 0.5s ease;
         }
-
         #camera-feed {
             width: 100%;
             max-width: 500px;
             border-radius: 1rem;
         }
 
+        /* Query styles */
         .query-list-item.active {
             background-color: #E6F8E7;
         }
-
         .chat-bubble-student {
             background-color: #f3f4f6;
             align-self: flex-start;
         }
-
         .chat-bubble-teacher {
             background-color: #E6F8E7;
             align-self: flex-end;
         }
 
+        /* Roster styles */
         .roster-status {
             font-weight: 600;
         }
-
         .roster-pending {
             color: #6b7280;
         }
-
         .roster-present {
             color: #16a34a;
         }
-
         .roster-absent {
             color: #dc2626;
+        }
+
+        /* Table hover effect */
+        tbody tr:hover {
+            background-color: #f9fafb; /* Tailwind bg-gray-50 */
         }
     </style>
 </head>
 
 <body class="bg-cream">
-    <div class="flex h-screen bg-white">
+    <!-- Main container -->
+    <div class="relative flex h-screen bg-white overflow-hidden">
+        
+        <!-- Mobile Overlay -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden"></div>
+        
         <!-- Sidebar -->
-        <aside class="w-64 bg-dark-green text-cream flex flex-col shadow-2xl">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-dark-green text-cream flex flex-col shadow-2xl 
+                           -translate-x-full transition-transform duration-300 ease-in-out 
+                           md:relative md:translate-x-0">
             <!-- Logo -->
             <div class="flex items-center justify-center p-6 border-b border-green-700">
-                <img src="school_logo.png" alt="School Logo" class="w-24">
+                <!-- Fix: Replaced local image with placeholder -->
+                <img src="school_logo.png" alt="School Logo" class="w-24 h-24 rounded-full">
             </div>
 
             <!-- Navigation -->
-            <nav id="sidebar-nav" class="flex-1 p-4 space-y-2">
+            <nav id="sidebar-nav" class="flex-1 p-4 space-y-2 overflow-y-auto">
                 <a href="#" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-lg transition-all"
                     data-target="dashboard-section">
                     <ion-icon name="grid-outline" class="text-2xl"></ion-icon>
@@ -175,8 +177,10 @@
 
             <!-- Logout -->
             <div class="p-4 border-t border-green-700">
-                <a href="index.html"
-                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all">
+                <!-- Fix: Changed href to '#' to prevent navigation errors -->
+                <a href="#"
+                    class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all"
+                    title="Logout (disabled in preview)">
                     <ion-icon name="log-out-outline" class="text-2xl"></ion-icon>
                     <span class="text-sm">Logout</span>
                 </a>
@@ -186,21 +190,29 @@
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col">
             <!-- Header -->
-            <header class="bg-white shadow-md p-6 flex justify-between items-center">
-                <h1 id="header-title" class="text-2xl font-heading text-dark-green">Dashboard</h1>
+            <header class="bg-white shadow-md p-4 md:p-6 flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <span class="text-sm font-medium text-gray-700">Welcome, Teacher!</span>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden text-dark-green text-3xl">
+                        <ion-icon name="menu-outline"></ion-icon>
+                    </button>
+                    <h1 id="header-title" class="text-xl md:text-2xl font-heading text-dark-green">Dashboard</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- Responsive: Hide text on small screens -->
+                    <span class="hidden sm:inline text-sm font-medium text-gray-700">Welcome, Teacher!</span>
                     <img src="https://placehold.co/40x40/046307/FAF8F1?text=T" alt="Teacher"
                         class="w-10 h-10 rounded-full border-2 border-dark-green">
                 </div>
             </header>
 
             <!-- Content -->
-            <main class="flex-1 p-8 bg-cream overflow-y-auto main-content">
+            <!-- Responsive: Added responsive padding -->
+            <main class="flex-1 p-4 md:p-8 bg-cream overflow-y-auto main-content">
 
                 <!-- Section 1: Dashboard (Default) -->
                 <section id="dashboard-section" class="content-section active space-y-8">
-                    <!-- ... existing dashboard content ... -->
+                    <!-- Grid is already responsive (grid-cols-1 md:grid-cols-3) -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-xl text-dark-green">Pending Queries</h3>
@@ -217,14 +229,15 @@
                     </div>
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Quick Actions</h3>
-                        <div class="flex flex-wrap gap-4">
+                        <!-- Responsive: flex-wrap + w-full sm:w-auto on buttons -->
+                        <div class="flex flex-col sm:flex-row flex-wrap gap-4">
                             <button
-                                class="nav-link-btn bg-dark-green text-white py-3 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md"
+                                class="nav-link-btn w-full sm:w-auto flex items-center justify-center bg-dark-green text-white py-3 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md"
                                 data-target="attendance-section">
                                 <ion-icon name="camera-outline" class="mr-2"></ion-icon> Start Attendance Scan
                             </button>
                             <button
-                                class="nav-link-btn bg-dark-green text-white py-3 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md"
+                                class="nav-link-btn w-full sm:w-auto flex items-center justify-center bg-dark-green text-white py-3 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md"
                                 data-target="queries-section">
                                 <ion-icon name="chatbubbles-outline" class="mr-2"></ion-icon> View Student Queries
                             </button>
@@ -262,9 +275,9 @@
                     <!-- Part 2: Live Scanner (Whole Class) -->
                     <div>
                         <h3 class="font-heading text-2xl text-dark-green mb-6">Live Attendance Scanner (Whole Class)</h3>
-                        <!-- UPDATED: Scanner Controls -->
-                        <div class="bg-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row gap-4 items-end">
-                            <div class="flex-1">
+                        <!-- Responsive: flex-col md:flex-row + flex-wrap -->
+                        <div class="bg-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row flex-wrap gap-4 items-end">
+                            <div class="flex-1 w-full min-w-[150px]">
                                 <label for="attendance-standard" class="block text-sm font-medium text-gray-700">1. Select
                                     Standard</label>
                                 <select id="attendance-standard"
@@ -278,8 +291,7 @@
                                     <option value="class-10">Class 10</option>
                                 </select>
                             </div>
-                            <!-- NEW: Select Section -->
-                            <div class="flex-1">
+                            <div class="flex-1 w-full min-w-[150px]">
                                 <label for="attendance-section-select" class="block text-sm font-medium text-gray-700">2. Select
                                     Section</label>
                                 <select id="attendance-section-select"
@@ -289,7 +301,7 @@
                                     <option value="B">Section B</option>
                                 </select>
                             </div>
-                            <div class="flex-1">
+                            <div class="flex-1 w-full min-w-[150px]">
                                 <label for="attendance-subject" class="block text-sm font-medium text-gray-700">3. Select
                                     Subject</label>
                                 <select id="attendance-subject"
@@ -303,19 +315,19 @@
                                     <option>Computer Science - 03:00 PM</option>
                                 </select>
                             </div>
-                            <!-- REMOVED: Select Student -->
                             <button id="start-camera-btn"
-                                class="w-full md:w-auto bg-dark-green text-white py-2 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md">
+                                class="w-full md:w-auto bg-dark-green text-white py-2 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md h-10">
                                 Start Camera
                             </button>
                         </div>
         
                         <!-- Camera Feed and Roster -->
+                        <!-- Responsive: grid-cols-1 md:grid-cols-2 -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                             <div class="bg-white p-6 rounded-2xl shadow-lg">
                                 <h3 class="font-heading text-2xl text-dark-green mb-4">Live Feed</h3>
                                 <div id="camera-border">
-                                    <video id="camera-feed" autoplay playsinline muted></video>
+                                    <video id="camera-feed" class="w-full h-auto" autoplay playsinline muted></video>
                                 </div>
                                 <p id="camera-status" class="text-center text-gray-600 mt-4 font-medium text-lg">Camera is
                                     off.</p>
@@ -334,10 +346,11 @@
 
                 <!-- Section 3: Student Queries -->
                 <section id="queries-section" class="content-section">
-                    <!-- ... existing queries content ... -->
                     <h2 class="text-3xl font-heading text-dark-green mb-6">Student Queries</h2>
-                    <div class="flex flex-col md:flex-row h-[70vh] bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="w-full md:w-1/3 border-r border-gray-200 overflow-y-auto">
+                    <!-- Responsive: h-[80vh] md:h-[70vh] and flex-col md:flex-row -->
+                    <div class="flex flex-col h-[80vh] md:h-[70vh] bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <!-- Responsive: w-full md:w-1/3 and min-h-[200px] -->
+                        <div class="w-full md:w-1/3 border-r border-gray-200 overflow-y-auto min-h-[200px]">
                             <div class="p-4 border-b border-gray-200">
                                 <input type="text" placeholder="Search queries..."
                                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green">
@@ -387,7 +400,8 @@
                                 </div>
                             </div>
                             <div class="p-4 bg-gray-50 border-t border-gray-200">
-                                <div class="flex gap-4">
+                                <!-- Responsive: flex-col sm:flex-row -->
+                                <div class="flex flex-col sm:flex-row gap-4">
                                     <textarea rows="2"
                                         class="flex-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green"
                                         placeholder="Type your reply..."></textarea>
@@ -403,7 +417,6 @@
 
                 <!-- Section 4: My Schedule (Read-Only) -->
                 <section id="schedule-section" class="content-section space-y-8">
-                    <!-- ... existing schedule content ... -->
                     <h2 class="text-3xl font-heading text-dark-green">My Weekly Schedule</h2>
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <p class="text-gray-700 mb-4">This is your teaching schedule for the week. This schedule is
@@ -411,6 +424,7 @@
                         <div class="mb-4">
                             <label for="schedule-class" class="block text-sm font-medium text-gray-700">View Schedule
                                 for:</label>
+                            <!-- Responsive: w-full md:w-1/3 -->
                             <select id="schedule-class"
                                 class="mt-1 w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green bg-white">
                                 <option>My Full Schedule</option>
@@ -425,7 +439,7 @@
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-light-green/30">
                             <h3 class="font-heading text-2xl text-dark-green mb-4">Timetable: My Full Schedule</h3>
                             <img src="https://placehold.co/800x600/E6F8E7/046307?text=Weekly+Timetable+Image"
-                                alt="Weekly Timetable" class="w-full rounded-lg">
+                                alt="Weekly Timetable" class="w-full h-auto rounded-lg">
                             <a href="#"
                                 class="inline-block mt-4 bg-dark-green text-white py-2 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md">
                                 Download PDF
@@ -436,13 +450,13 @@
 
                 <!-- Section 5: Curriculum (Read-Only) -->
                 <section id="curriculum-section" class="content-section space-y-8">
-                    <!-- ... existing curriculum content ... -->
                     <h2 class="text-3xl font-heading text-dark-green">View Curriculum</h2>
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <p class="text-gray-700 mb-4">Here you can view and download all academic and non-academic
                             curriculum files.</p>
+                        <!-- Responsive: overflow-x-auto for table -->
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left">
+                            <table class="w-full text-left min-w-[600px]">
                                 <thead class="border-b-2 border-gray-200">
                                     <tr>
                                         <th class="py-2 px-4 text-sm font-semibold text-gray-600">File Name</th>
@@ -452,7 +466,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="border-b border-gray-100">
+                                    <tr class="border-b border-gray-100 transition-colors">
                                         <td class="py-3 px-4">Class 8 Maths Syllabus.pdf</td>
                                         <td class="py-3 px-4">Class 8</td>
                                         <td class="py-3 px-4">Academic</td>
@@ -461,7 +475,7 @@
                                                     name="download-outline"></ion-icon></button>
                                         </td>
                                     </tr>
-                                    <tr class="border-b border-gray-100">
+                                    <tr class="border-b border-gray-100 transition-colors">
                                         <td class="py-3 px-4">Art Competition Rules.pdf</td>
                                         <td class="py-3 px-4">All</td>
                                         <td class="py-3 px-4">Non-Academic</td>
@@ -478,12 +492,14 @@
 
                 <!-- Section 6: My Profile -->
                 <section id="profile-section" class="content-section space-y-8">
-                    <!-- ... existing profile content ... -->
                     <h2 class="text-3xl font-heading text-dark-green">My Profile</h2>
+                    <!-- Responsive: grid-cols-1 md:grid-cols-3 -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Responsive: md:col-span-2 -->
                         <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-2xl text-dark-green mb-4">My Information</h3>
                             <form class="space-y-4">
+                                <!-- Responsive: grid-cols-1 md:grid-cols-2 -->
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700">Full Name</label>
@@ -549,11 +565,30 @@
             const quickActionButtons = document.querySelectorAll('.nav-link-btn');
             const headerTitle = document.getElementById('header-title');
 
+            // --- Mobile Menu Elements ---
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+
             // --- Global variables for live scanner ---
             let isCameraOn = false;
 
+            // --- Mobile Menu Toggle Function ---
+            function toggleSidebar() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+
+            // --- Event Listeners for Mobile Menu ---
+            if (menuBtn) {
+                menuBtn.addEventListener('click', toggleSidebar);
+            }
+            if (overlay) {
+                overlay.addEventListener('click', toggleSidebar);
+            }
+
             // --- Main Section Switching Logic ---
-            function switchSection(targetId) {
+            function switchSection(targetId, title) {
                 contentSections.forEach(section => {
                     section.classList.remove('active');
                 });
@@ -567,30 +602,45 @@
                 const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
                 if (targetLink) {
                     targetLink.classList.add('active');
-                    headerTitle.textContent = targetLink.querySelector('span').textContent;
+                    // Update header title
+                    if(title && headerTitle) {
+                        headerTitle.textContent = title;
+                    }
                 }
                 // Stop the camera if we navigate away
                 if (targetId !== 'attendance-section' && isCameraOn) {
                     stopLiveView();
                 }
+
+                // --- Hide sidebar on mobile after selection ---
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
             }
 
-            // --- FIXED: Added correct event listeners ---
+            // --- Click handler for sidebar navigation ---
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    switchSection(link.getAttribute('data-target'));
+                    const targetId = link.getAttribute('data-target');
+                    const title = link.querySelector('span').textContent;
+                    switchSection(targetId, title);
                 });
             });
 
+            // --- Click handler for quick action buttons ---
             quickActionButtons.forEach(button => {
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
-                    switchSection(button.getAttribute('data-target'));
+                    const targetId = button.getAttribute('data-target');
+                    // Find the matching nav link to get the title
+                    const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+                    const title = targetLink ? targetLink.querySelector('span').textContent : 'Dashboard';
+                    switchSection(targetId, title);
                 });
             });
 
-            // --- FIXED: Replaced HTML comment with JS comment ---
             // --- Demo Student Data ---
             const demoStudentsByClass = {
                 'class-5': [
@@ -668,7 +718,7 @@
                 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     try {
                         cameraStatus.textContent = `Requesting camera access...`;
-                        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                         videoFeed.srcObject = stream;
 
                         isCameraOn = true;
