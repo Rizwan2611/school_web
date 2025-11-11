@@ -5,31 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard | Tehzeeb Islamic English School</title>
     
-    <!-- Auth Check -->
+    <nav class="bg-dark-green text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <span class="text-xl font-heading">Student Dashboard</span>
+            <a href="#" class="hover:text-cream logout-link" title="Logout">Logout</a>
+        </div>
+    </nav>
+
     <script>
-        // Fix: Commented out redirect to prevent errors in sandboxed preview environments.
-        // The preview was failing because it couldn't find '/index.html'.
+        // We comment this out for preview, but in production, it should be enabled.
         /*
         if (!sessionStorage.getItem('isLoggedIn')) {
-            window.location.href = '/index.html';
+            try {
+                window.location.href = '/index.html';
+            } catch (e) {
+                console.error("Redirect failed, likely in a sandboxed environment:", e);
+            }
         }
         */
-        console.log("Auth check skipped for preview.");
     </script>
 
-    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- 3. Ionicons (for dashboard icons) -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-    <!-- 4. Tailwind Customization -->
     <script>
         tailwind.config = {
             theme: {
@@ -49,7 +53,6 @@
         }
     </script>
 
-    <!-- 5. Custom CSS for Dashboard -->
     <style>
         /* Apply base fonts */
         body {
@@ -105,7 +108,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 50px;
+            /* Responsive: Use min-height for flexible height */
+            min-height: 50px;
             background-color: #f3f4f6; /* gray-100 */
             border-radius: 8px;
             font-weight: 500;
@@ -134,25 +138,17 @@
 </head>
 <body class="bg-cream">
 
-    <!-- 
-      Main container
-      - We use flex h-screen here because we removed the redundant top <nav>
-    -->
     <div class="relative flex h-screen bg-white overflow-hidden">
         
-        <!-- Mobile Overlay -->
         <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden"></div>
-
-        <!-- Sidebar -->
+        
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-dark-green text-cream flex flex-col shadow-2xl 
                            -translate-x-full transition-transform duration-300 ease-in-out 
                            md:relative md:translate-x-0">
-            <!-- Logo -->
             <div class="flex items-center justify-center p-6 border-b border-green-700">
-                <img src="school_logo.png" alt="School Logo" class="w-24 h-24 rounded-full">
+                <img src="https://placehold.co/100x100/FAF8F1/046307?text=LOGO" alt="School Logo" class="w-24 h-24 rounded-full">
             </div>
 
-            <!-- Navigation -->
             <nav id="sidebar-nav" class="flex-1 p-4 space-y-2 overflow-y-auto">
                 <a href="#" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-lg transition-all" data-target="dashboard-section">
                     <ion-icon name="grid-outline" class="text-2xl"></ion-icon>
@@ -180,53 +176,43 @@
                 </a>
             </nav>
 
-            <!-- Logout -->
             <div class="p-4 border-t border-green-700">
-                <!-- Fix: Changed href to '#' to prevent navigation errors -->
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all" title="Logout (disabled in preview)">
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all logout-link" title="Logout">
                     <ion-icon name="log-out-outline" class="text-2xl"></ion-icon>
                     <span class="text-sm">Logout</span>
                 </a>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
         <div class="flex-1 flex flex-col">
-            <!-- Header -->
             <header class="bg-white shadow-md p-4 md:p-6 flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <!-- Mobile Menu Button -->
                     <button id="mobile-menu-btn" class="md:hidden text-dark-green text-3xl">
                         <ion-icon name="menu-outline"></ion-icon>
                     </button>
                     <h1 id="header-title" class="text-xl md:text-2xl font-heading text-dark-green">Dashboard</h1>
                 </div>
                 <div class="flex items-center gap-4">
-                    <span class="hidden sm:inline text-sm font-medium text-gray-700">Welcome, Rohan</span>
+                    <span class="hidden sm:inline text-sm font-medium text-gray-700">Welcome, Rohan!</span>
                     <img src="https://placehold.co/40x40/046307/FAF8F1?text=S" alt="Student" class="w-10 h-10 rounded-full border-2 border-dark-green">
                 </div>
             </header>
 
-            <!-- Content -->
             <main class="flex-1 p-4 md:p-8 bg-cream overflow-y-auto main-content">
                 
-                <!-- Section 1: Dashboard (Default) -->
                 <section id="dashboard-section" class="content-section active space-y-8">
-                    <!-- Notifications & Alerts -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Notifications & Alerts</h3>
                         <div class="space-y-4">
-                            <!-- Urgent Alert Example -->
                             <div class="flex items-start gap-4 p-4 bg-red-100 border-l-4 border-alert-red rounded-lg">
-                                <ion-icon name="warning-outline" class="text-2xl text-alert-red flex-shrink-0"></ion-icon>
+                                <ion-icon name="warning-outline" class="text-2xl text-alert-red flex-shrink-0 mt-1"></ion-icon>
                                 <div>
                                     <h4 class="font-semibold text-alert-red">Attendance Alert: Absent</h4>
                                     <p class="text-sm text-gray-700">Rohan Sharma was marked **absent** from Maths (Class 8) today, Nov 5, 2025.</p>
                                 </div>
                             </div>
-                            <!-- Standard Notice Example -->
                             <div class="flex items-start gap-4 p-4 bg-light-green/50 border-l-4 border-dark-green rounded-lg">
-                                <ion-icon name="megaphone-outline" class="text-2xl text-dark-green flex-shrink-0"></ion-icon>
+                                <ion-icon name="megaphone-outline" class="text-2xl text-dark-green flex-shrink-0 mt-1"></ion-icon>
                                 <div>
                                     <h4 class="font-semibold text-dark-green">New Notice: Art Competition</h4>
                                     <p class="text-sm text-gray-700">The rules for the annual Art Competition have been posted. Check the Curriculum section for details.</p>
@@ -235,7 +221,6 @@
                         </div>
                     </div>
 
-                    <!-- At a Glance Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-xl text-dark-green">Pending Queries</h3>
@@ -253,13 +238,11 @@
                     </div>
                 </section>
 
-                <!-- Section 2: Attendance Record -->
                 <section id="attendance-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Attendance Record (November 2025)</h2>
                     
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
-                        <!-- Legend -->
-                        <div class="flex flex-col sm:flex-row justify-center items-center flex-wrap gap-4 sm:gap-6 mb-4">
+                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="w-4 h-4 rounded-full bg-green-600"></span>
                                 <span class="text-sm">Present</span>
@@ -274,9 +257,7 @@
                             </div>
                         </div>
 
-                        <!-- Calendar Grid -->
-                        <div class="calendar-grid">
-                            <!-- Headers -->
+                        <div class="calendar-grid gap-1 sm:gap-2">
                             <div class="calendar-day-head">Sun</div>
                             <div class="calendar-day-head">Mon</div>
                             <div class="calendar-day-head">Tue</div>
@@ -285,7 +266,6 @@
                             <div class="calendar-day-head">Fri</div>
                             <div class="calendar-day-head">Sat</div>
                             
-                            <!-- Days (Demo for Nov 2025) -->
                             <div class="calendar-day other-month">27</div>
                             <div class="calendar-day other-month">28</div>
                             <div class="calendar-day other-month">29</div>
@@ -325,11 +305,9 @@
                     </div>
                 </section>
 
-                <!-- Section 3: Ask a Query -->
                 <section id="query-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Ask a Query</h2>
 
-                    <!-- New Query Form -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Submit a New Query</h3>
                         <form class="space-y-4">
@@ -357,36 +335,33 @@
                         </form>
                     </div>
 
-                    <!-- Query History -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">My Query History</h3>
                         <ul class="space-y-4">
-                            <li class="flex flex-col sm:flex-row justify-between sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
                                 <div>
                                     <p class="font-semibold text-gray-800">Science - Photosynthesis</p>
                                     <p class="text-sm text-gray-600">To: Mr. Ibrahim Ali</p>
                                 </div>
-                                <span class="self-start sm:self-auto text-sm font-medium text-green-700 bg-green-100 py-1 px-3 rounded-full">Answered</span>
+                                <span class="text-sm font-medium text-green-700 bg-green-100 py-1 px-3 rounded-full">Answered</span>
                             </li>
-                            <li class="flex flex-col sm:flex-row justify-between sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
                                 <div>
                                     <p class="font-semibold text-gray-800">English - Essay Submission</p>
                                     <p class="text-sm text-gray-600">To: Aisha Begum</p>
                                 </div>
-                                <span class="self-start sm:self-auto text-sm font-medium text-yellow-700 bg-yellow-100 py-1 px-3 rounded-full">Pending</span>
+                                <span class="text-sm font-medium text-yellow-700 bg-yellow-100 py-1 px-3 rounded-full">Pending</span>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <!-- Section 4: Weekly Schedule -->
                 <section id="schedule-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">My Weekly Schedule</h2>
                     
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <p class="text-gray-700 mb-4">This is the weekly schedule for Class 8. This schedule is managed by the admin.</p>
                         
-                        <!-- Timetable Display -->
                         <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-light-green/30">
                             <h3 class="font-heading text-2xl text-dark-green mb-4">Timetable: Class 8</h3>
                             <img src="https://placehold.co/800x600/E6F8E7/046307?text=Class+8+Timetable" alt="Weekly Timetable" class="w-full h-auto rounded-lg">
@@ -397,7 +372,6 @@
                     </div>
                 </section>
 
-                <!-- Section 5: Curriculum -->
                 <section id="curriculum-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">School Curriculum</h2>
 
@@ -437,12 +411,10 @@
                     </div>
                 </section>
 
-                <!-- Section 6: Student Profile -->
                 <section id="profile-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Student Profile</h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Profile Info Card -->
                         <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-2xl text-dark-green mb-4">Student Information</h3>
                             <form class="space-y-4">
@@ -468,7 +440,6 @@
                             </form>
                         </div>
 
-                        <!-- Change Password Card -->
                         <div class="bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-2xl text-dark-green mb-4">Change Password</h3>
                             <form class="space-y-4">
@@ -479,9 +450,8 @@
                                 <div>
                                     <label for="confirm-pass" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
                                     <input type="password" id="confirm-pass" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green">
-                                <!-- Fix: Removed stray '-----------------' text -->
                                 </div>
-                                <button type="submit" class="w-full bg-dark-green text-white py-3 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md">
+                                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-5 rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md">
                                     Set New Password
                                 </button>
                             </form>
@@ -493,11 +463,11 @@
         </div>
     </div>
 
-    <!-- 6. JavaScript for Interactivity -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('.nav-link');
             const contentSections = document.querySelectorAll('.content-section');
+            const quickActionButtons = document.querySelectorAll('.nav-link-btn');
             const headerTitle = document.getElementById('header-title');
 
             // --- Mobile Menu Elements ---
@@ -541,11 +511,10 @@
                 const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
                 if (targetLink) {
                     targetLink.classList.add('active');
-                }
-
-                // Update header title
-                if (title && headerTitle) {
-                    headerTitle.textContent = title;
+                    // Update header title
+                    if(title && headerTitle) {
+                        headerTitle.textContent = title;
+                    }
                 }
 
                 // --- Hide sidebar on mobile after selection ---
@@ -562,6 +531,34 @@
                     const targetId = link.getAttribute('data-target');
                     const title = link.querySelector('span').textContent;
                     switchSection(targetId, title);
+                });
+            });
+
+            // Click handler for quick action buttons on dashboard (if any)
+            quickActionButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = button.getAttribute('data-target');
+                    const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+                    const title = targetLink ? targetLink.querySelector('span').textContent : 'Dashboard';
+                    switchSection(targetId, title);
+                });
+            });
+
+            // --- Logout Logic ---
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log("Logging out...");
+                    sessionStorage.removeItem('isLoggedIn');
+                    // We still try to redirect, even if it fails in preview
+                    try {
+                        window.location.href = '/index.html';
+                    } catch (err) {
+                        console.error("Redirect failed (expected in preview):", err.message);
+                        console.log("Logout complete. Redirecting to login page...");
+                    }
                 });
             });
 
