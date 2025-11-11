@@ -2,45 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- This viewport tag is essential for mobile responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Tehzeeb Islamic English School</title>
     
-    <!-- Top Bar (Original Navigation) -->
     <nav class="bg-dark-green text-white p-4 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <span class="text-xl font-heading">Admin Dashboard</span>
-            <!-- Fix: Changed href to '#' to prevent navigation errors in sandboxed environments -->
-            <a href="#" class="text-sm hover:text-cream transition-colors" title="Logout (disabled in preview)">Logout</a>
+            <a href="#" class="text-sm hover:text-cream transition-colors logout-link" title="Logout">Logout</a>
         </div>
     </nav>
 
-    <!-- Auth Check -->
     <script>
-        // Fix: Commented out redirect to prevent errors in sandboxed preview environments.
-        // The preview was failing because it couldn't find '/index.html'.
+        // We comment this out for preview, but in production, it should be enabled.
         /*
         if (!sessionStorage.getItem('isLoggedIn')) {
-            // Fix: Changed relative path to absolute path
-            window.location.href = '/index.html';
+            try {
+                window.location.href = '/index.html';
+            } catch (e) {
+                console.error("Redirect failed, likely in a sandboxed environment:", e);
+            }
         }
         */
-        console.log("Auth check skipped for preview.");
     </script>
 
-    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 2. Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- 3. Ionicons (for dashboard icons) -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-    <!-- 4. Tailwind Customization -->
     <script>
         tailwind.config = {
             theme: {
@@ -59,15 +52,14 @@
         }
     </script>
 
-    <!-- 5. Custom CSS for Dashboard -->
     <style>
         /* Apply base fonts */
         body {
-            font-family: 'Poppins', 'sans-serif';
+            font-family: 'Poppins', sans-serif;
             background-color: #FAF8F1; /* cream */
         }
         h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', 'serif';
+            font-family: 'Playfair Display', serif;
         }
 
         /* Sidebar active state */
@@ -85,7 +77,6 @@
         .content-section {
             display: none;
         }
-        /* Show the active section */
         .content-section.active {
             display: block;
         }
@@ -112,19 +103,13 @@
         }
         
         /* Custom scrollbar for content area */
-        .main-content::-webkit-scrollbar {
-            width: 8px;
-        }
-        .main-content::-webkit-scrollbar-track {
-            background: #FAF8F1; /* cream */
-        }
+        .main-content::-webkit-scrollbar { width: 8px; }
+        .main-content::-webkit-scrollbar-track { background: #FAF8F1; }
         .main-content::-webkit-scrollbar-thumb {
             background: #c4c4c4;
             border-radius: 4px;
         }
-        .main-content::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
-        }
+        .main-content::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
 
         /* Table hover effect */
         tbody tr:hover {
@@ -135,30 +120,17 @@
 </head>
 <body class="bg-cream">
 
-    <!-- Main container:
-         - relative: for positioning the mobile overlay
-         - md:flex: enables flexbox layout only on medium screens and up
-         - h-screen: makes it full height (minus the top nav)
-         - overflow-hidden: prevents double scrollbars on the body
-    -->
-    <div class="relative md:flex h-[calc(100vh-64px)] bg-white overflow-hidden">
-        
-        <!-- Mobile Overlay:
-             - Hides when sidebar is closed, covers content when open
-        -->
+    <div class="relative flex h-screen bg-white overflow-hidden">
+
         <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden"></div>
 
-        <!-- Sidebar -->
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-dark-green text-cream flex flex-col shadow-2xl 
                            -translate-x-full transition-transform duration-300 ease-in-out 
-                           md:relative md:translate-x-0 md:flex">
-            <!-- Logo -->
+                           md:relative md:translate-x-0">
             <div class="flex items-center justify-center p-6 border-b border-green-700">
-                <!-- Using a placeholder for the logo as the path was local -->
-                <img src="school_logo.png" alt="School Logo" class="w-24 h-24 rounded-full">
+                <img src="https://placehold.co/100x100/FAF8F1/046307?text=LOGO" alt="School Logo" class="w-24 h-24 rounded-full">
             </div>
 
-            <!-- Navigation -->
             <nav id="sidebar-nav" class="flex-1 p-4 space-y-2 overflow-y-auto">
                 <a href="#" class="nav-link active flex items-center gap-3 px-4 py-3 rounded-lg transition-all" data-target="dashboard-section">
                     <ion-icon name="grid-outline" class="text-2xl"></ion-icon>
@@ -186,25 +158,17 @@
                 </a>
             </nav>
 
-            <!-- Logout -->
             <div class="p-4 border-t border-green-700">
-                <!-- Fix: Changed href to '#' to prevent navigation errors in sandboxed environments -->
-                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all" title="Logout (disabled in preview)">
-                    <!-- Fixed typo: ion-pre -> ion-icon -->
+                <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-cream/70 hover:bg-cream hover:text-dark-green transition-all logout-link" title="Logout">
                     <ion-icon name="log-out-outline" class="text-2xl"></ion-icon>
                     <span class="text-sm">Logout</span>
                 </a>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
         <div class="flex-1 flex flex-col">
-            <!-- Header -->
             <header class="bg-white shadow-md p-4 md:p-6 flex justify-between items-center">
                 <div class="flex items-center gap-4">
-                    <!-- Mobile Menu Button:
-                         - Hidden on medium screens and up (md:hidden)
-                    -->
                     <button id="mobile-menu-btn" class="md:hidden text-dark-green text-3xl">
                         <ion-icon name="menu-outline"></ion-icon>
                     </button>
@@ -216,12 +180,9 @@
                 </div>
             </header>
 
-            <!-- Content -->
             <main class="flex-1 p-4 md:p-8 bg-cream overflow-y-auto main-content">
                 
-                <!-- Section 1: Dashboard (Default) -->
                 <section id="dashboard-section" class="content-section active space-y-8">
-                    <!-- At a Glance Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-6 rounded-2xl shadow-lg">
                             <h3 class="font-heading text-xl text-dark-green">Total Students</h3>
@@ -237,7 +198,6 @@
                         </div>
                     </div>
 
-                    <!-- Quick Actions Card -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Quick Actions</h3>
                         <div class="flex flex-col sm:flex-row flex-wrap gap-4">
@@ -254,11 +214,9 @@
                     </div>
                 </section>
 
-                <!-- Section 2: Manage Curriculum -->
                 <section id="curriculum-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Manage Curriculum</h2>
                     
-                    <!-- Upload Card -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Upload New File</h3>
                         <form class="space-y-4">
@@ -281,7 +239,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Type</label>
-                                <div class="flex gap-4 mt-2">
+                                <div class="flex flex-col sm:flex-row gap-4 mt-2">
                                     <label class="flex items-center gap-2"><input type="radio" name="type" value="academic" class="focus:ring-dark-green text-dark-green" checked> Academic</label>
                                     <label class="flex items-center gap-2"><input type="radio" name="type" value="non-academic" class="focus:ring-dark-green text-dark-green"> Non-Academic</label>
                                 </div>
@@ -302,7 +260,6 @@
                         </form>
                     </div>
 
-                    <!-- Existing Files List -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Existing Curriculum</h3>
                         <div class="overflow-x-auto">
@@ -340,11 +297,9 @@
                     </div>
                 </section>
 
-                <!-- Section 3: Important Notices -->
                 <section id="notices-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Important Notices</h2>
                     
-                    <!-- Post Notice Card -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Post a New Notice</h3>
                         <form class="space-y-4">
@@ -362,37 +317,34 @@
                         </form>
                     </div>
 
-                    <!-- Recent Notices -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Recent Notices</h3>
                         <ul class="space-y-4">
-                            <li class="flex flex-col sm:flex-row justify-between sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
                                 <div>
                                     <p class="font-semibold text-gray-800">Parent-Teacher Meeting</p>
                                     <p class="text-sm text-gray-600">Posted on: 2025-11-04</p>
                                 </div>
-                                <button class="text-red-600 hover:text-red-800 self-start sm:self-center" title="Delete"><ion-icon name="trash-outline" class="text-xl"></ion-icon></button>
+                                <button class="text-red-600 hover:text-red-800" title="Delete"><ion-icon name="trash-outline" class="text-xl"></ion-icon></button>
                             </li>
-                            <li class="flex flex-col sm:flex-row justify-between sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
+                            <li class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-light-green/50 rounded-lg gap-2">
                                 <div>
                                     <p class="font-semibold text-gray-800">Holiday: Annual Sports Day</p>
                                     <p class="text-sm text-gray-600">Posted on: 2025-11-02</p>
                                 </div>
-                                <button class="text-red-600 hover:text-red-800 self-start sm:self-center" title="Delete"><ion-icon name="trash-outline" class="text-xl"></ion-icon></button>
+                                <button class="text-red-600 hover:text-red-800" title="Delete"><ion-icon name="trash-outline" class="text-xl"></ion-icon></button>
                             </li>
                         </ul>
                     </div>
                 </section>
 
-                <!-- Section 4: Exam Schedules -->
                 <section id="exams-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Exam Schedules</h2>
 
-                    <!-- Add Exam Card -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Add New Exam</h3>
-                        <form class="space-y-4 md:space-y-0 md:flex md:gap-4 md:items-end md:flex-wrap">
-                            <div class="flex-1 min-w-[150px]">
+                        <form class="flex flex-col md:flex-row flex-wrap gap-4 items-end">
+                            <div class="flex-1 w-full min-w-[150px]">
                                 <label for="exam-class" class="block text-sm font-medium text-gray-700">Class</label>
                                 <select id="exam-class" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green bg-white">
                                     <option>Class 5</option>
@@ -403,15 +355,15 @@
                                     <option>Class 10</option>
                                 </select>
                             </div>
-                            <div class="flex-1 min-w-[150px]">
+                            <div class="flex-1 w-full min-w-[150px]">
                                 <label for="exam-subject" class="block text-sm font-medium text-gray-700">Subject</label>
                                 <input type="text" id="exam-subject" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green" placeholder="e.g., Mathematics">
                             </div>
-                            <div class="flex-1 min-w-[150px]">
+                            <div class="flex-1 w-full min-w-[150px]">
                                 <label for="exam-date" class="block text-sm font-medium text-gray-700">Date</label>
                                 <input type="date" id="exam-date" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green">
                             </div>
-                            <div class="flex-1 min-w-[150px]">
+                            <div class="flex-1 w-full min-w-[150px]">
                                 <label for="exam-time" class="block text-sm font-medium text-gray-700">Time</label>
                                 <input type="time" id="exam-time" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green">
                             </div>
@@ -421,7 +373,6 @@
                         </form>
                     </div>
 
-                    <!-- Upcoming Exams List -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Upcoming Exams</h3>
                         <div class="overflow-x-auto">
@@ -440,7 +391,6 @@
                                         <td class="py-3 px-4">2025-11-10</td>
                                         <td class="py-3 px-4">09:00 AM</td>
                                         <td class="py-3 px-4">Class 8</td>
-                                        <!-- Fixed typo: class_id -> class -->
                                         <td class="py-3 px-4">Mathematics</td>
                                         <td class="py-3 px-4 flex gap-2">
                                             <button class="text-blue-600 hover:text-blue-800" title="Edit"><ion-icon name="create-outline"></ion-icon></button>
@@ -463,11 +413,9 @@
                     </div>
                 </section>
 
-                <!-- Section 5: Weekly Timetables -->
                 <section id="timetables-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Manage Weekly Timetables</h2>
                     
-                    <!-- Upload/Update Card -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Upload / Update Timetable</h3>
                         <p class="text-sm text-gray-600 mb-4">Upload a PDF or image file for a class's weekly schedule. Uploading for a class that already has a schedule will replace the old one.</p>
@@ -503,7 +451,6 @@
                         </form>
                     </div>
 
-                    <!-- Current Timetables List -->
                     <div class="bg-white p-6 rounded-2xl shadow-lg">
                         <h3 class="font-heading text-2xl text-dark-green mb-4">Current Timetables</h3>
                         <div class="overflow-x-auto">
@@ -541,66 +488,54 @@
                     </div>
                 </section>
 
-                <!-- Section 6: Manage Users -->
                 <section id="users-section" class="content-section space-y-8">
                     <h2 class="text-3xl font-heading text-dark-green">Manage Users</h2>
                     <p class="mt-4 text-gray-700">User management section (for adding/deleting teachers, students, and parents) will be built here.</p>
 
-                    <!-- Student Photo Upload (Visible in Manage Users) -->
-                    <!-- Removed 'content-section' and 'active' classes to nest it properly -->
-                    <div id="student-photo-upload-section" class="space-y-4 bg-white p-6 rounded-2xl shadow-lg">
-                      <h3 class="text-2xl font-heading text-dark-green mb-4">Upload Student Photo</h3>
-                      <form id="studentPhotoForm" enctype="multipart/form-data" class="flex flex-col gap-4 w-full max-w-md">
-                        <div>
-                            <label for="student_id" class="block text-sm font-medium text-gray-700">Student ID</label>
-                            <input type="number" name="student_id" id="student_id" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green" required />
-                        </div>
-                        <div>
-                            <label for="standard" class="block text-sm font-medium text-gray-700">Standard</label>
-                            <input type="text" name="standard" id="standard" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green" required />
-                        </div>
-                        <div>
-                            <label for="section" class="block text-sm font-medium text-gray-700">Section</label>
-                            <select name="section" id="section" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green bg-white" required>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="photo" class="block text-sm font-medium text-gray-700">Photo</label>
-                            <input type="file" name="photo" id="photo" accept="image/*" capture="environment" class="mt-1 w-full text-sm text-gray-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-lg file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-light-green file:text-dark-green
-                                hover:file:bg-dark-green/20" required />
-                        </div>
-                        
-                        <button type="submit" class="bg-dark-green text-white py-3 px-5 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md">
-                            Upload Photo
-                        </button>
-                        <div id="admin-upload-result" class="mt-2 text-sm"></div>
-                      </form>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg">
+                        <h2 class="text-2xl font-heading text-dark-green mb-4">Upload Student Photo</h2>
+                        <form id="studentPhotoForm" enctype="multipart/form-data" class="flex flex-col gap-3 w-full max-w-md">
+                            <div>
+                                <label for="student-id" class="block text-sm font-medium text-gray-700">Student ID</label>
+                                <input type="number" name="student_id" id="student-id" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green" required />
+                            </div>
+                            <div>
+                                <label for="student-standard" class="block text-sm font-medium text-gray-700">Standard</label>
+                                <input type="text" name="standard" id="student-standard" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green" required />
+                            </div>
+                            <div>
+                                <label for="student-section" class="block text-sm font-medium text-gray-700">Section</label>
+                                <select name="section" id="student-section" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-dark-green focus:border-dark-green bg-white" required>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="student-photo" class="block text-sm font-medium text-gray-700">Photo</label>
+                                <input type="file" name="photo" id="student-photo" accept="image/*" capture="environment" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-light-green file:text-dark-green hover:file:bg-light-green/80" required />
+                            </div>
+                            <button type="submit" class="bg-dark-green text-white py-2 px-4 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md self-start">Upload Photo</button>
+                            <div id="admin-upload-result" class="mt-2 font-medium"></div>
+                        </form>
                     </div>
                 </section>
             </main>
         </div>
     </div>
 
-    <!-- 6. JavaScript for Interactivity -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('.nav-link');
             const contentSections = document.querySelectorAll('.content-section');
             const quickActionButtons = document.querySelectorAll('.nav-link-btn');
+            const headerTitle = document.getElementById('header-title');
 
             // --- Mobile Menu Elements ---
             const menuBtn = document.getElementById('mobile-menu-btn');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('mobile-overlay');
-            const headerTitle = document.getElementById('header-title');
 
             // --- Mobile Menu Toggle Function ---
             function toggleSidebar() {
@@ -616,8 +551,7 @@
                 overlay.addEventListener('click', toggleSidebar);
             }
 
-
-            // --- Main Section Switching Function ---
+            // --- Main Section Switching Logic ---
             function switchSection(targetId, title) {
                 // Hide all content sections
                 contentSections.forEach(section => {
@@ -639,11 +573,10 @@
                 const targetLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
                 if (targetLink) {
                     targetLink.classList.add('active');
-                }
-
-                // Update the header title
-                if (title && headerTitle) {
-                    headerTitle.textContent = title;
+                    // Update header title
+                    if(title && headerTitle) {
+                        headerTitle.textContent = title;
+                    }
                 }
 
                 // --- Hide sidebar on mobile after selection ---
@@ -689,7 +622,7 @@
                 });
             }
 
-            // --- File input name display (Curriculum) ---
+            // --- File input name display (Curriculum - RESTORED) ---
             const curriculumFileInput = document.getElementById('curriculum-file-upload');
             const curriculumFileName = document.getElementById('curriculum-file-name');
 
@@ -712,45 +645,51 @@
                 const studentId = formData.get('student_id');
                 const resultDiv = document.getElementById('admin-upload-result');
                 resultDiv.textContent = 'Uploading...';
-                resultDiv.classList.remove('text-red-600');
-                resultDiv.classList.add('text-gray-600');
-
+                resultDiv.className = 'mt-2 font-medium text-gray-600'; // Reset classes
+                
                 try {
-                  // Replace this URL with your actual API endpoint
-                  // const res = await fetch(`/admin/students/${studentId}/upload_photo`, {
-                  //   method: 'POST',
-                  //   body: formData
-                  // });
-                  
-                  // --- FAKE UPLOAD FOR DEMO ---
-                  // This simulates a 1.5 second upload delay
+                  // SIMULATE API CALL
+                  console.log("Simulating upload for student:", studentId, formData.get('photo'));
                   await new Promise(resolve => setTimeout(resolve, 1500));
-                  // Simulate a successful response
-                  const res = { ok: true, json: async () => ({ message: 'Success' }) }; 
-                  // To simulate a failure, use this instead:
-                  // const res = { ok: false, json: async () => ({ error: 'Upload failed.' }) };
-                  // --- END FAKE UPLOAD ---
 
+                  // Mock success
+                  const data = { message: 'Photo uploaded successfully!' };
+                  const res = { ok: true, json: async () => data };
+                  // const res = { ok: false, json: async () => ({ error: "Student ID not found." }) }; // Mock error
 
-                  const data = await res.json();
                   if (res.ok) {
-                    resultDiv.textContent = 'Photo uploaded successfully!';
-                    resultDiv.classList.remove('text-gray-600');
+                    resultDiv.textContent = data.message || 'Photo uploaded successfully!';
                     resultDiv.classList.add('text-green-700');
                     studentPhotoForm.reset(); // Clear the form
                   } else {
-                    resultDiv.textContent = data.error || 'Upload failed.';
-                    resultDiv.classList.remove('text-gray-600');
+                    const data_1 = await res.json();
+                    resultDiv.textContent = data_1.error || 'Upload failed.';
                     resultDiv.classList.add('text-red-600');
                   }
                 } catch (err) {
-                  console.error(err);
-                  resultDiv.textContent = 'Error uploading photo. Check console.';
-                  resultDiv.classList.remove('text-gray-600');
+                  console.error('Upload error:', err);
+                  resultDiv.textContent = 'Error uploading photo.';
                   resultDiv.classList.add('text-red-600');
                 }
               });
             }
+
+            // --- Logout Logic ---
+            const logoutLinks = document.querySelectorAll('.logout-link');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    console.log("Logging out...");
+                    sessionStorage.removeItem('isLoggedIn');
+                    // We still try to redirect, even if it fails in preview
+                    try {
+                        window.location.href = '/index.html';
+                    } catch (err) {
+                        console.error("Redirect failed (expected in preview):", err.message);
+                        console.log("Logout complete. Redirecting to login page...");
+                    }
+                });
+            });
         });
     </script>
 </body>
